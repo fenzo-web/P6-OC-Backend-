@@ -1,6 +1,6 @@
 const Book = require("../models/book");
 const fs = require("fs");
-const sharp = require("shrap");
+//const sharp = require("shrap");
 
 exports.getAllBook = (req, res, next) => {
   Book.find()
@@ -18,8 +18,8 @@ exports.createBook = (req, res, next) => {
   const bookObject = JSON.parse(req.body.book);
   delete bookObject._id;
   delete bookObject._userID;
-  // test sharp
-  if (!req.file) {
+  /* test sharp
+   if (!req.file) {
     return res.status(400).json({ message: "Image not found" });
   }
 
@@ -32,7 +32,8 @@ exports.createBook = (req, res, next) => {
       fs.unlinkSync(req.file.path);
     })
     .catch((error) => console.log(error));
-  // fin test sharp
+ 
+  */
   const book = new Book({
     ...bookObject,
     userId: req.auth.userId,

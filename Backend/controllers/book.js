@@ -133,6 +133,49 @@ exports.deleteBook = (req, res, next) => {
     });
 };
 
+exports.bookRating = (req, res, next) => {
+  const userId = req.body.userId;
+  const rating = req.body.rating;
+
+  // Vérification des données entrantes
+  if (!userId || !rating) {
+    return res.status(400).json({ message: "User ID and rating are required" });
+  }
+
+  Book.findById(req.params.id)
+    .then((book) => {
+      if (!book) {
+        return res.status(404).json({ message: "Book not found" });
+      }
+
+      // Vérifier si l'utilisateur a déjà noté le livre
+      const existingRating = book.ratings.find(
+        (rating) => rating.userId === userId
+      );
+      if (existingRating) {
+        return res
+          .status(400)
+          .json({ message: "Book already rated by this user" });
+      }
+
+      // Ajouter la nouvelle note
+      book.ratings.push({ userId: userId, grade: rating });
+
+      // Recalculer la moyenne des notes
+      const totalRatings = book.ratings.length;
+      const sumRating = book.ratings.reduce(
+        (sum, rating) => sum + rating.grade,
+        0
+      );
+      book.averageRating = Math.round(sumRating / totalRatings);
+
+      // Sauvegarder le livre avec les nouvelles données
+      return book.save();
+    })
+    .then((updatedBook) => res.status(200).json(updatedBook))
+    .catch((error) => res.status(500).json({ error }));
+};
+
 exports.bestRatingBooks = (req, res, next) => {
   Book.find()
     .sort({ averageRating: -1 }) // Trie par averageRating en ordre decroissant

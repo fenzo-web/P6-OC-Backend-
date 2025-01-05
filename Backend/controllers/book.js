@@ -132,3 +132,11 @@ exports.deleteBook = (req, res, next) => {
       res.status(500).json({ error });
     });
 };
+
+exports.bestRatingBooks = (req, res, next) => {
+  Book.find()
+    .sort({ averageRating: -1 }) // Trie par averageRating en ordre decroissant
+    .limit(3)
+    .then((books) => res.status(200).json(books))
+    .catch((error) => res.status(500).json({ error }));
+};

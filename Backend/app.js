@@ -13,8 +13,8 @@ const dbUrl = process.env.URL;
 
 mongoose
   .connect(`mongodb+srv://${dbUser}:${dbPassword}@${dbUrl}`)
-  .then(() => console.log("Connexion à MongoDB réussie !"))
-  .catch(() => console.log("Connexion à MongoDB échouée !"));
+  .then(() => console.log("MongoDB connection successful !"))
+  .catch(() => console.log("Connection to MongoDB failed!"));
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");

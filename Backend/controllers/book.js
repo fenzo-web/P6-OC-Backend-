@@ -122,7 +122,7 @@ exports.deleteBook = (req, res, next) => {
         fs.unlink(`images/${filename}`, () => {
           Book.deleteOne({ _id: req.params.id })
             .then(() => {
-              res.status(200).json({ message: "Book supprimé !" });
+              res.status(200).json({ message: "Book delete !" });
             })
             .catch((error) => res.status(401).json({ error }));
         });
